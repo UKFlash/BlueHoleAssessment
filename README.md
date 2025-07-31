@@ -8,7 +8,6 @@ This project provides category import and semantic search functionality using Op
 - Composer
 - MySQL
 - Laravel 10+
-- Node.js (for frontend assets)
 - OpenAI API Key
 
 ## 🚀 Setup Instructions
@@ -16,5 +15,5 @@ This project provides category import and semantic search functionality using Op
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/laravel-ai-category-search.git
-cd laravel-ai-category-search
+git clone https://github.com/UKFlash/BlueHoleAssessment.git
+cd BlueHoleAssessment
