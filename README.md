@@ -1,19 +1,33 @@
-# Laravel AI Category Search
+# Laravel Category Vector Search App
 
-This project provides category import and semantic search functionality using OpenAI embeddings.
+This application allows you to:
+- Import categories from an Excel file
+- Generate vector embeddings for AI-powered search
+- Perform semantic category search using cosine similarity
 
-## 📦 Requirements
+---
 
-- PHP 8.2+
+## 🔧 Requirements
+
+- PHP >= 8.1
+- Laravel >= 10
+
 - Composer
+composer install
+
 - MySQL
-- Laravel 10+
-- OpenAI API Key
+DB_DATABASE=your_db
+DB_USERNAME=your_user
+DB_PASSWORD=your_pass
 
-## 🚀 Setup Instructions
+Run Migration
+php artisan migrate
 
-1. Clone the repository:
+Import Categories
+php artisan import:categories storage/app/Lynx_Keyword_Enhanced_Services.xlsx
 
-```bash
-git clone https://github.com/UKFlash/BlueHoleAssessment.git
-cd BlueHoleAssessment
+Store Embeddings
+php artisan generate:embeddings
+
+Url to run
+e.g. [127.](http://127.0.0.1:8000/search)
