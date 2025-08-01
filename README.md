@@ -1,16 +1,38 @@
-# Laravel Category Vector Search App
+# Laravel Vector-Based Category Search
 
-This application allows you to:
-- Import categories from an Excel file
-- Generate vector embeddings for AI-powered search
-- Perform semantic category search using cosine similarity
+This Laravel application imports category names from an Excel file and performs AI-powered vector similarity search. Users can enter natural language search queries and get relevant categories based on semantic similarity.
+
+---
+
+## 🚀 Features
+
+- Excel import of categories via Artisan command
+- Category name to embedding conversion using free Hugging Face API
+- Cosine similarity search on vector embeddings
+- Blade form to perform and display search results
+- Stores category embeddings in a separate table
+- Laravel 11, Laravel Excel, Guzzle
 
 ---
 
 ## 🔧 Requirements
 
-- PHP >= 8.1
-- Laravel >= 10
+- PHP >= 8.2
+- Composer
+- Laravel >= 11
+- SQLite / MySQL
+- Excel file of categories
+- Free Hugging Face API Token (optional for faster embedding)
+
+---
+
+## 📁 Setup Instructions
+
+**Clone the Repository**
+
+```bash
+git clone https://github.com/UKFlash/BlueHoleAssessment.git
+cd BlueHoleAssessment
 
 - Composer
 composer install
