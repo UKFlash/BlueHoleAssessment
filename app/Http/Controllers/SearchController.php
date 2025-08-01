@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\CategoryEmbedding;
@@ -11,38 +12,22 @@ class SearchController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $results = [];
+        $results = collect();
 
         if ($search) {
-            $apiKey = config('services.openai.key');
+            $searchVec = Helpers::getEmbedding($search);
+            dd($search,$searchVec);
+            if ($searchVec) {
+                $embeddings = CategoryEmbedding::with('category')->get();
 
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-            ])->post('https://api.openai.com/v1/embeddings', [
-                'input' => $search,
-                'model' => 'text-embedding-ada-002',
-            ]);
-
-            if ($response->successful()) {
-                $queryVector = $response->json('data.0.embedding');
-
-                $categories = CategoryEmbedding::with('category')->get();
-
-                $scored = $categories->map(function ($item) use ($queryVector) {
-                    $score = cosineSimilarity($queryVector, $item->embedding);
-                    return [
-                        'category' => $item->category,
-                        'score' => $score,
-                    ];
-                });
-
-                $results = $scored->sortByDesc('score')->take(5)->filter(fn($r) => $r['score'] > 0.7);
+                $results = $embeddings->map(function ($embedding) use ($searchVec) {
+                    $score = Helpers::cosine($searchVec, $embedding->embedding);
+                    $embedding->category->score = $score;
+                    return $embedding->category;
+                })->sortByDesc('score')->filter(fn($c) => $c->score >= 0.5)->take(5);
             }
         }
 
-        return view('search', [
-            'search' => $search,
-            'results' => collect($results)
-        ]);
+        return view('search', compact('search', 'results'));
     }
 }

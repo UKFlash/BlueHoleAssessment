@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\Helpers;
 use Illuminate\Console\Command;
 use App\Models\Category;
 use Illuminate\Support\Facades\Http;
@@ -14,22 +15,16 @@ class GenerateCategoryEmbeddings extends Command
 
     public function handle()
     {
-        $categories = Category::all();
-        $apiKey = config('services.openai.key');
+        $categories = Category::doesntHave('embedding')->get();
 
         foreach ($categories as $category) {
-            $response = Http::withToken($apiKey)->post('https://api.openai.com/v1/embeddings', [
-                'input' => $category->name,
-                'model' => 'text-embedding-ada-002',
-            ]);
+            $embedding = Helpers::getEmbedding($category->name);
 
-            if ($response->successful()) {
-                $embedding = $response->json('data.0.embedding');
-
-                CategoryEmbedding::updateOrCreate(
-                    ['category_id' => $category->id],
-                    ['embedding' => $embedding]
-                );
+            if ($embedding) {
+                CategoryEmbedding::create([
+                    'category_id' => $category->id,
+                    'embedding' => $embedding,
+                ]);
 
                 $this->info("Embedded: {$category->name}");
             } else {
